@@ -3,7 +3,6 @@
 #include <filesystem>
 #include <cstdlib>
 
-
 // Suncord Github: https://github.com/verticalsync/Suncord
 // My contact: @xbhl
 
