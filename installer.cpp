@@ -62,15 +62,13 @@ bool VerifyManager(const std::string& manager) {
     return (result == 0);
 }
 
-void InstallGit()
-{
+void InstallGit() {
   int result;
   std::filesystem::path cache = std::filesystem::temp_directory_path() / "git-cache";
   
   printf("Creating git-cache directory");
 
-  if(!std::filesystem::exists(cache))
-  {
+  if(!std::filesystem::exists(cache)) {
     std::filesystem::create_directory(cache);
   }
 
@@ -102,8 +100,7 @@ void InstallGit()
   }
 }
 
-void InstallNPM()
-{
+void InstallNPM() {
   int result;
   std::filesystem::path cache = std::filesystem::temp_directory_path() / "npm-cache";
   
@@ -117,8 +114,7 @@ void InstallNPM()
 
   if(IsWindows()) {
     result = std::system("curl -o npm-installer.msi https://nodejs.org/dist/v21.7.1/node-v21.7.1-x64.msi"); 
-    if(result == 0)
-    {
+    if(result == 0) {
       printf("Downloaded NPM installer");
       result = std::system("npm-cache/npm-installer.msi");
       if(result == 0) {
@@ -138,13 +134,11 @@ void InstallNPM()
   }
 }
 
-void InstallLinuxDependency(std::string dep)
-{
+void InstallLinuxDependency(std::string dep) {
     PackageManager PM = CheckPackageManagers();
     printf("Using %s", PM);
     
-    switch(PM)
-    {
+    switch(PM) {
       case PackageManager::APK:
         std::system(("sudo apk add " + dep).c_str());
         break;

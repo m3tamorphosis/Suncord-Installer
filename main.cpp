@@ -7,8 +7,7 @@
 // This is the first time I've written an installer in C++
 // Any issues I urge you make an issue report in github.
 
-bool CheckGit()
-{
+bool CheckGit() {
   printf("Checking if GIT is installed");
   int result = std::system("git --version");
   if(result == 0) {
@@ -21,8 +20,7 @@ bool CheckGit()
   }
 }
 
-bool CheckNPM()
-{
+bool CheckNPM() {
   printf("Checking for NPM");
   int result = std::system("npm -v");
   if(result == 0) {
@@ -35,8 +33,7 @@ bool CheckNPM()
   }
 }
 
-int main()
-{
+int main() {
   printf("Performing checks");
   
   if(!CheckGit()) {
