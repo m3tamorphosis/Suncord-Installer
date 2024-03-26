@@ -1,9 +1,9 @@
-# Work in progress (TESTING STAGE)
+# Work in progress
 
 Download **Suncord** today!!!
 https://github.com/verticalsync/suncord
 
-**Current stage**: TESTING BEFORE STABLE RELEASE
+**Current stage**: EXPERIMENTAL
 
 **Planned functionality**
 - ~~Install GIT~~
@@ -11,6 +11,3 @@ https://github.com/verticalsync/suncord
 - ~~Install pnpm~~
 - ~~Build Suncord~~
 - ~~Inject Suncord~~
-- Test stage
-- Optimise
-- Stable release version 1
