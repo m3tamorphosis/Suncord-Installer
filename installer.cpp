@@ -19,8 +19,7 @@ enum class PackageManager {
     UNKNOWN,
 };
 
-bool IsWindows()
-{
+bool IsWindows() {
   #ifdef _WIN32
     return true;
   #else
@@ -47,8 +46,7 @@ PackageManager CheckPackageManagers() {
     for(const std::string& manager : PM) {
         if(VerifyManager(manager)) {
           auto PM = managers.find(manager);
-          if(PM != managers.end()) 
-          {
+          if(PM != managers.end()) {
             return PM->second;
           }
         }
@@ -78,34 +76,28 @@ void InstallGit()
 
   printf("Installing Git...");
 
-  if(IsWindows())
-  {
+  if(IsWindows()) {
     result = std::system("curl -o Git-Installer.exe https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/Git-2.44.0-64-bit.exe");
 
-    if(result == 0)
-    {
+    if(result == 0) {
       printf("Downloaded Git installer");
       result = std::system("git-cache/Git-Installer.exe");
 
-      if(result == 0)
-      {
+      if(result == 0) {
         printf("Git installed");
       }
     }
 
-    else
-    {
+    else {
       printf("Failed to install Git");
     }
   }
 
-  else
-  {
+  else {
     printf("Failed to download git installer");
   }
 
-  if(!IsWindows())
-  {
+  if(!IsWindows()) {
     InstallLinuxDependency("git");
   }
 }
@@ -117,37 +109,31 @@ void InstallNPM()
   
   printf("Creating npm-cache directory");
 
-  if(!std::filesystem::exists(cache))
-  {
+  if(!std::filesystem::exists(cache)) {
     std::filesystem::create_directory(cache);
   }
 
   printf("Installing NPM...");
 
-  if(IsWindows())
-  {
+  if(IsWindows()) {
     result = std::system("curl -o npm-installer.msi https://nodejs.org/dist/v21.7.1/node-v21.7.1-x64.msi"); 
     if(result == 0)
     {
       printf("Downloaded NPM installer");
       result = std::system("npm-cache/npm-installer.msi");
-      if(result == 0)
-      {
+      if(result == 0) {
         printf("Installed NPM");
       }
-      else
-      {
+      else {
         printf("Failed to install NPM, please install manually");
       }
     }
-    else
-    {
+    else {
       printf("Failed to download NPM installer");
     }
   }
 
-  if(!IsWindows())
-  {
+  if(!IsWindows()) {
     InstallLinuxDependency("npm");
   }
 }
