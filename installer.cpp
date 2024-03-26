@@ -5,7 +5,7 @@
 
 // Installers configuration
 
-enum class PackageManager {
+enum class PACKAGEMANAGER {
     APT,
     YUM,
     EMERGE,
@@ -19,6 +19,8 @@ enum class PackageManager {
     UNKNOWN,
 };
 
+auto PackageManager  = CheckPackageManagers(); 
+
 bool IsWindows() {
   #ifdef _WIN32
     return true;
@@ -27,20 +29,20 @@ bool IsWindows() {
   #endif
 }
 
-static std::map<std::string, PackageManager> managers = {
-    {"apt", PackageManager::APT},
-    {"yum", PackageManager::YUM},
-    {"emerge", PackageManager::EMERGE},
-    {"pacman", PackageManager::PACMAN},
-    {"zypper", PackageManager::ZYPPER},
-    {"urpmi", PackageManager::URPMI},
-    {"nix-env", PackageManager::NIX_ENV},
-    {"pkg", PackageManager::PKG},
-    {"pkg_add", PackageManager::PKG_ADD},
-    {"apk", PackageManager::APK}
+static std::map<std::string, PACKAGEMANAGER> managers = {
+    {"apt", PACKAGEMANAGER::APT},
+    {"yum", PACKAGEMANAGER::YUM},
+    {"emerge", PACKAGEMANAGER::EMERGE},
+    {"pacman", PACKAGEMANAGER::PACMAN},
+    {"zypper", PACKAGEMANAGER::ZYPPER},
+    {"urpmi", PACKAGEMANAGER::URPMI},
+    {"nix-env", PACKAGEMANAGER::NIX_ENV},
+    {"pkg", PACKAGEMANAGER::PKG},
+    {"pkg_add", PACKAGEMANAGER::PKG_ADD},
+    {"apk", PACKAGEMANAGER::APK}
 };
 
-PackageManager CheckPackageManagers() {
+PACKAGEMANAGER CheckPackageManagers() {
     std::string PM[] = {"apt", "yum", "emerge", "pacman", "zypper", "urpmi", "nix-env", "pkg", "pkg_add","apk"};
 
     for(const std::string& manager : PM) {
@@ -52,8 +54,8 @@ PackageManager CheckPackageManagers() {
         }
     }
     
-    std::cout << "Could not find the manager, please install git manually" << std::endl;
-    return PackageManager::UNKNOWN;
+    printf("Could not find available package managers, please install git manually \n");
+    return PACKAGEMANAGER::UNKNOWN;
 }
 
 bool VerifyManager(const std::string& manager) {
@@ -66,33 +68,33 @@ void InstallGit() {
   int result;
   std::filesystem::path cache = std::filesystem::temp_directory_path() / "git-cache";
   
-  printf("Creating git-cache directory");
+  printf("Creating git-cache directory\n");
 
   if(!std::filesystem::exists(cache)) {
     std::filesystem::create_directory(cache);
   }
 
-  printf("Installing Git...");
+  printf("Installing Git...\n");
 
   if(IsWindows()) {
     result = std::system("curl -o Git-Installer.exe https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/Git-2.44.0-64-bit.exe");
 
     if(result == 0) {
-      printf("Downloaded Git installer");
+      printf("Downloaded Git installer\n");
       result = std::system("git-cache/Git-Installer.exe");
 
       if(result == 0) {
-        printf("Git installed");
+        printf("Git installed\n");
       }
     }
 
     else {
-      printf("Failed to install Git");
+      printf("Failed to install Git\n");
     }
   }
 
   else {
-    printf("Failed to download git installer");
+    printf("Failed to download git installer\n");
   }
 
   if(!IsWindows()) {
@@ -104,28 +106,28 @@ void InstallNPM() {
   int result;
   std::filesystem::path cache = std::filesystem::temp_directory_path() / "npm-cache";
   
-  printf("Creating npm-cache directory");
+  printf("Creating npm-cache directory\n");
 
   if(!std::filesystem::exists(cache)) {
     std::filesystem::create_directory(cache);
   }
 
-  printf("Installing NPM...");
+  printf("Installing NPM...\n");
 
   if(IsWindows()) {
     result = std::system("curl -o npm-installer.msi https://nodejs.org/dist/v21.7.1/node-v21.7.1-x64.msi"); 
     if(result == 0) {
-      printf("Downloaded NPM installer");
+      printf("Downloaded NPM installer\n");
       result = std::system("npm-cache/npm-installer.msi");
       if(result == 0) {
-        printf("Installed NPM");
+        printf("Installed NPM\n");
       }
       else {
-        printf("Failed to install NPM, please install manually");
+        printf("Failed to install NPM, please install manually\n");
       }
     }
     else {
-      printf("Failed to download NPM installer");
+      printf("Failed to download NPM installer\n");
     }
   }
 
@@ -134,39 +136,42 @@ void InstallNPM() {
   }
 }
 
+void InstallPNPM() {
+  system("npm i -g pnpm");
+}
+
 void InstallLinuxDependency(std::string dep) {
-    PackageManager PM = CheckPackageManagers();
-    printf("Using %s", PM);
+    printf("Using %s", PackageManager);
     
-    switch(PM) {
-      case PackageManager::APK:
+    switch(PackageManager) {
+      case PACKAGEMANAGER::APK:
         std::system(("sudo apk add " + dep).c_str());
         break;
-      case PackageManager::APT:
+      case PACKAGEMANAGER::APT:
         std::system(("sudo apt-get install " + dep).c_str());
         break;
-      case PackageManager::EMERGE:
+      case PACKAGEMANAGER::EMERGE:
         std::system(("sudo emerge --ask --verbose " + dep).c_str());
         break;
-      case PackageManager::NIX_ENV:
+      case PACKAGEMANAGER::NIX_ENV:
         std::system(("sudo nix-env -i " + dep).c_str());
         break;
-      case PackageManager::PACMAN:
+      case PACKAGEMANAGER::PACMAN:
         std::system(("sudo pacman -S " + dep).c_str());
         break;
-      case PackageManager::PKG:
+      case PACKAGEMANAGER::PKG:
         std::system(("sudo pkg install " + dep).c_str());
         break;
-      case PackageManager::PKG_ADD:
+      case PACKAGEMANAGER::PKG_ADD:
         std::system(("sudo pkg_add " + dep).c_str());
         break;
-      case PackageManager::URPMI:
+      case PACKAGEMANAGER::URPMI:
         std::system(("sudo urmpi " + dep).c_str());
         break;
-      case PackageManager::YUM:
+      case PACKAGEMANAGER::YUM:
         std::system(("sudo yum install " + dep).c_str());
         break;
-      case PackageManager::ZYPPER:
+      case PACKAGEMANAGER::ZYPPER:
         std::system(("sudo zypper install " + dep).c_str());
         break;
     }
