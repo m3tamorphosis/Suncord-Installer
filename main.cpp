@@ -75,7 +75,7 @@ void Build() {
   }
   printf("Installed frozen lockfile dependencies\nBeginnning build...\n");
 
-  result = system("pnpm bulid");
+  result = system("pnpm build");
   if (result != 0) {
     printf("Failed to build Suncord.\n");
     return;
