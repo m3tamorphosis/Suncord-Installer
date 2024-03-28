@@ -98,17 +98,33 @@ int main() {
   bool NPMInstalled = CheckNPM();
   bool PNPMInstalled = CheckPNPM();
 
-  if (!GitInstalled)
+  if (!GitInstalled) {
     InstallGit();
+    GitInstalled = CheckGit();
+    if (!GitInstalled) {
+      printf("Error during Git installation.");
+      return 1;
+    }
+  }
 
-  if (!NPMInstalled)
+  if (!NPMInstalled) {
     InstallNPM();
+    NPMInstalled = CheckNPM();
+    if (!NPMInstalled) {
+      printf("Error during NPM installation");
+      return 1;
+    }
+  }
 
-  if (!PNPMInstalled && NPMInstalled)
+  if (!PNPMInstalled && NPMInstalled) {
     InstallPNPM();
+    PNPMInstalled = CheckPNPM();
+    if (!NPMInstalled) {
+      printf("Erorr during PNPM installation");
+      return 1;
+    }
+  }
 
-  if (GitInstalled && NPMInstalled && PNPMInstalled)
-    Build();
-
+  Build();
   return 0;
 }
