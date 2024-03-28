@@ -1,6 +1,7 @@
-# Work in progress
+# This is the bleeding edge version
+The software works as expected but may be prone to a few logical bugs.
 
-Download **Suncord** today!!!
+Manually install **Suncord** here
 https://github.com/verticalsync/suncord
 
 **Current stage**: BLEEDING EDGE BUILD
