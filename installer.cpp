@@ -19,14 +19,18 @@ enum class PACKAGEMANAGER {
   UNKNOWN,
 };
 
-auto PackageManager = CheckPackageManagers();
-
 bool IsWindows() {
 #ifdef _WIN32
   return true;
 #else
   return false;
 #endif
+}
+
+bool VerifyManager(const std::string &manager) {
+  std::string command = "which " + manager;
+  int result = std::system(command.c_str());
+  return (result == 0);
 }
 
 static std::map<std::string, PACKAGEMANAGER> managers = {
@@ -55,13 +59,46 @@ PACKAGEMANAGER CheckPackageManagers() {
   return PACKAGEMANAGER::UNKNOWN;
 }
 
-bool VerifyManager(const std::string &manager) {
-  std::string command = "which " + manager;
-  int result = std::system(command.c_str());
-  return (result == 0);
-}
+auto PackageManager = CheckPackageManagers();
 
 // Installation
+
+void InstallLinuxDependency(std::string dep) {
+  printf("Using %s", PackageManager);
+
+  switch (PackageManager) {
+  case PACKAGEMANAGER::APK:
+    std::system(("sudo apk add " + dep).c_str());
+    break;
+  case PACKAGEMANAGER::APT:
+    std::system(("sudo apt-get install " + dep).c_str());
+    break;
+  case PACKAGEMANAGER::EMERGE:
+    std::system(("sudo emerge --ask --verbose " + dep).c_str());
+    break;
+  case PACKAGEMANAGER::NIX_ENV:
+    std::system(("sudo nix-env -i " + dep).c_str());
+    break;
+  case PACKAGEMANAGER::PACMAN:
+    std::system(("sudo pacman -S " + dep).c_str());
+    break;
+  case PACKAGEMANAGER::PKG:
+    std::system(("sudo pkg install " + dep).c_str());
+    break;
+  case PACKAGEMANAGER::PKG_ADD:
+    std::system(("sudo pkg_add " + dep).c_str());
+    break;
+  case PACKAGEMANAGER::URPMI:
+    std::system(("sudo urmpi " + dep).c_str());
+    break;
+  case PACKAGEMANAGER::YUM:
+    std::system(("sudo yum install " + dep).c_str());
+    break;
+  case PACKAGEMANAGER::ZYPPER:
+    std::system(("sudo zypper install " + dep).c_str());
+    break;
+  }
+}
 
 void InstallGit() {
   int result;
@@ -129,7 +166,7 @@ void InstallNPM() {
       if (result == 0) {
         printf("Installed NPM\n");
       } else {
-        printf("Failed to install NPM, please install manually\n");
+      printf("Failed to install NPM, please install manually\n");
       }
     } else {
       printf("Failed to download NPM installer\n");
@@ -142,40 +179,3 @@ void InstallNPM() {
 }
 
 void InstallPNPM() { system("npm i -g pnpm"); }
-
-void InstallLinuxDependency(std::string dep) {
-  printf("Using %s", PackageManager);
-
-  switch (PackageManager) {
-  case PACKAGEMANAGER::APK:
-    std::system(("sudo apk add " + dep).c_str());
-    break;
-  case PACKAGEMANAGER::APT:
-    std::system(("sudo apt-get install " + dep).c_str());
-    break;
-  case PACKAGEMANAGER::EMERGE:
-    std::system(("sudo emerge --ask --verbose " + dep).c_str());
-    break;
-  case PACKAGEMANAGER::NIX_ENV:
-    std::system(("sudo nix-env -i " + dep).c_str());
-    break;
-  case PACKAGEMANAGER::PACMAN:
-    std::system(("sudo pacman -S " + dep).c_str());
-    break;
-  case PACKAGEMANAGER::PKG:
-    std::system(("sudo pkg install " + dep).c_str());
-    break;
-  case PACKAGEMANAGER::PKG_ADD:
-    std::system(("sudo pkg_add " + dep).c_str());
-    break;
-  case PACKAGEMANAGER::URPMI:
-    std::system(("sudo urmpi " + dep).c_str());
-    break;
-  case PACKAGEMANAGER::YUM:
-    std::system(("sudo yum install " + dep).c_str());
-    break;
-  case PACKAGEMANAGER::ZYPPER:
-    std::system(("sudo zypper install " + dep).c_str());
-    break;
-  }
-}
